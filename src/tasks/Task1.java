@@ -22,7 +22,8 @@ public class Task1 implements Task {
     Map<Integer, Person> persons = PersonService.findPersons(personIds).stream()
             .collect(Collectors.toMap(Person::getId, person -> person));
     return personIds.stream()
-            .map(persons::get) // HashMap -> O(1)
+            .map(id -> persons.getOrDefault(id, null)) // HashMap -> O(1)
+            .filter(Objects::nonNull)
             .collect(Collectors.toList());
   }
 

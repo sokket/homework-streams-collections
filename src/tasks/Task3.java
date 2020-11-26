@@ -16,17 +16,11 @@ public class Task3 implements Task {
   // !!! Редактируйте этот метод !!!
   private List<Person> sort(Collection<Person> persons) {
     return persons.stream()
-        .sorted((p1, p2) -> {
-          int secondNameCompare = p1.getSecondName().compareTo(p2.getSecondName());
-          if (secondNameCompare != 0)
-            return secondNameCompare;
-
-          int firstNameCompare = p1.getFirstName().compareTo(p2.getFirstName());
-          if (firstNameCompare != 0)
-            return firstNameCompare;
-
-          return p1.getCreatedAt().compareTo(p2.getCreatedAt());
-        })
+        .sorted(
+                Comparator.comparing(Person::getSecondName)
+                        .thenComparing(Person::getFirstName)
+                        .thenComparing(Person::getCreatedAt)
+        )
         .collect(Collectors.toList());
   }
 

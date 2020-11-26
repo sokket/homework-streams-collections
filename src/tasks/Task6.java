@@ -23,12 +23,11 @@ public class Task6 implements Task {
     Map<Integer, Area> areaIdMap = areas.stream()
             .collect(Collectors.toMap(Area::getId, area -> area));
     return persons.stream()
-            .flatMap(person -> {
-               Set<Integer> areasIds = personAreaIds.get(person.getId());
-               return areasIds.stream()
+            .flatMap(person ->
+               personAreaIds.get(person.getId()).stream()
                        .map(areaIdMap::get)
-                       .map(area -> person.getFirstName() + " - " + area.getName());
-            })
+                       .map(area -> person.getFirstName() + " - " + area.getName())
+            )
             .collect(Collectors.toSet());
   }
 

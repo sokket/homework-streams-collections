@@ -31,36 +31,22 @@ public class Task8 implements Task {
     return new HashSet<>(getNames(persons));
   }
 
-  private void appendIfPresent(StringBuilder result, String nullableString) {
-    Optional.ofNullable(nullableString)
-            .ifPresent(string -> {
-                result.append(' ');
-                result.append(string);
-            });
-  }
-
   //Для фронтов выдадим полное имя, а то сами не могут
   public String getPersonFullName(Person person) {
-    StringBuilder result = new StringBuilder();
-    appendIfPresent(result, person.getSecondName());
-    appendIfPresent(result, person.getFirstName());
-    appendIfPresent(result, person.getMiddleName());
-    return result.toString().trim();
+        return Stream.of(person.getSecondName(), person.getFirstName(), person.getMiddleName())
+                .filter(Objects::nonNull)
+                .collect(Collectors.joining(" "));
   }
 
   // словарь id персоны -> ее имя
   public Map<Integer, String> getPersonNames(Collection<Person> persons) {
     return persons.stream()
-            .collect(Collectors.toMap(Person::getId, this::getPersonFullName));
+            .collect(Collectors.toMap(Person::getId, this::getPersonFullName, (p1, p2) -> p1));
   }
 
   // есть ли совпадающие в двух коллекциях персоны?
   public boolean hasSamePersons(Collection<Person> persons1, Collection<Person> persons2) {
-    for (Person person : persons1) {
-        if (persons2.contains(person))
-            return true;
-    }
-    return false;
+        return !Collections.disjoint(persons1, persons2);
   }
 
   public long countEven(Stream<Integer> numbers) {
